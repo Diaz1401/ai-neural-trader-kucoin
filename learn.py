@@ -1,35 +1,4 @@
-# Neural Trader App connects to the Kucoin exchange API using the ccxt library, retrieves data about the 
-# current market price of Bitcoin, and uses a neural network model to predict whether the market will 
-# trend upwards or downwards. Based on this prediction, the script will either buy or sell a small 
-# amount of Bitcoin.
-
-# The script begins by importing several libraries that it will use throughout its execution, 
-# including the ccxt library for interacting with the Kucoin API, the time library for adding delays, 
-# the numpy library for numerical computations, the scikit-learn library for machine learning, and 
-# the pickle and json libraries for saving and loading data.
-
-# Next, the script defines several variables such as the exchange name, API key and secret, 
-# symbol to trade, and the amount of Bitcoin to trade. It also instantiates the Kucoin exchange 
-# class from ccxt and sets the sandbox mode to False.
-
-# The script then enters an infinite loop to continuously trade Bitcoin. Within this loop, it 
-# retrieves the current ticker information for the symbol, gets the current bid and ask prices, 
-# and uses a neural network model to predict the market direction. If the prediction is bullish, 
-# the script will place a buy order at the ask price and add the premium to the price. If the 
-# prediction is bearish, the script will place a sell order at the bid price and subtract the 
-# premium from the price. If the market is bullish it uses a 0 if it is bearish it uses a 1
-
-# The script also includes a try-except block to handle any errors that may occur during the 
-# trading process, such as a failed trade or an API error.
-
-# Finally, the script saves the trained neural network model and the best values for the hyperparameters 
-# to a file for later use. This allows the script to continue using the same model and 
-# hyperparameters on future runs without the need to retrain the model each time.
-
-# These are the time frame you can use for KuCoin
-# {'1m': '1min', '3m': '3min', '5m': '5min', '15m': '15min', '30m': '30min', 
-# '1h': '1hour', '2h': '2hour', '4h': '4hour', '6h': '6hour', '8h': '8hour', 
-# '12h': '12hour', '1d': '1day', '1w': '1week'}
+#!/usr/bin/proxychains python3
 
 ## Things to improve on: 
 # 1) use bayes for chosing hyperparamters or evolutions algorithm
@@ -54,9 +23,9 @@ exchange = getattr(ccxt, exchange_name)()
 exchange.set_sandbox_mode(enabled=False)
 
 # Set your API keys
-exchange.apiKey = '63976e0702c544000126a8ca'
-exchange.secret = '9655f65f-16f0-4790-9610-cfd61c908101'
-exchange.password = 'meowmeow'
+exchange.apiKey = '657e612f747ae50001466868'
+exchange.secret = 'bcbf1f27-afe9-4343-b8c7-24f0d2e98d71'
+exchange.password = '@2Heroku'
 
 # Set the symbol you want to trade on Kucoin
 symbol = 'BTC/USDT'

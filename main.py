@@ -1,21 +1,4 @@
-# This code is using a machine learning model to predict the market direction of a 
-# given cryptocurrency. The model is a neural network created using the MLPClassifier 
-# class from the scikit-learn library. The code also uses the GridSearchCV class 
-# to tune the hyperparameters of the model and find the best combination. 
-# The code then updates the model with the best hyperparameters and trains it using 
-# historical data. The trained model is then used to predict the market direction of 
-# the cryptocurrency. The code also includes a trading script that uses the predicted 
-# market direction to buy or sell the cryptocurrency on an exchange.
-# If the market is bullish it uses a 0 if it is bearish it uses a 1
-
-# The code includes a trading script that places orders on an exchange based 
-# on the predicted market direction. The script places a buy order if the market 
-# is predicted to be bullish and a sell order if the market is predicted to be bearish.
-
-# These are the time frame you can use for KuCoin
-# {'1m': '1min', '3m': '3min', '5m': '5min', '15m': '15min', '30m': '30min', 
-# '1h': '1hour', '2h': '2hour', '4h': '4hour', '6h': '6hour', '8h': '8hour', 
-# '12h': '12hour', '1d': '1day', '1w': '1week'}
+#!/usr/bin/proxychains python3
 
 ## Things to improve on: 
 # 1) use bayes for chosing hyperparamters or evolutions algorithm
@@ -42,9 +25,9 @@ exchange = getattr(ccxt, exchange_name)()
 exchange.set_sandbox_mode(enabled=False)
 
 # Set your API keys
-exchange.apiKey = '63976e0702c544000126a8ca'
-exchange.secret = '9655f65f-16f0-4790-9610-cfd61c908101'
-exchange.password = 'meowmeow'
+exchange.apiKey = '657e612f747ae50001466868'
+exchange.secret = 'bcbf1f27-afe9-4343-b8c7-24f0d2e98d71'
+exchange.password = '@2Heroku'
 
 # Set the symbol you want to trade on Kucoin
 symbol = 'BTC/USDT'
