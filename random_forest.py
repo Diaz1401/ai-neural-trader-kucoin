@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/proxychains python3
 
 import ccxt
 from time import sleep
@@ -10,6 +10,8 @@ from flask import Flask, render_template, send_file
 import threading
 from sklearn.model_selection import GridSearchCV
 import telebot
+import os
+from dotenv import load_dotenv
 
 BASE = 'USDT'
 CRYPTO = 'BTC3L'
@@ -17,18 +19,29 @@ CRYPTO = 'BTC3L'
 # CRYPTO = 'USDT'
 SYMBOL = CRYPTO + '/' + BASE
 TIMEFRAME = '15m'
-SLEEP = 300
+SLEEP = 1
 TEST  = False
 
 app = Flask(__name__)
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Access the environment variables
+API_KEY = os.getenv('API_KEY')
+SECRET = os.getenv('SECRET')
+PASSWORD = os.getenv('PASSWORD')
+BOT_TOKEN = os.getenv('BOT_TOKEN')
+CHAT_ID = os.getenv('CHAT_ID')
+
 
 def initialize_exchange():
     exchange_name = 'kucoin'
     exchange = getattr(ccxt, exchange_name)()
     exchange.set_sandbox_mode(enabled=False)
-    exchange.apiKey = ''
-    exchange.secret = ''
-    exchange.password = ''
+    exchange.apiKey = API_KEY
+    exchange.secret = SECRET
+    exchange.password = PASSWORD
     return exchange
 
 def train_model(data):
@@ -41,7 +54,7 @@ def train_model(data):
         target.append(1 if data[i+1][-1] > data[i][-1] else 0)
     features = np.array(features)
     target = np.array(target)
-    model = RandomForestClassifier(n_estimators=500, max_depth=1000, max_features=150, n_jobs=-1)
+    model = RandomForestClassifier(criterion='entropy', n_estimators=1000, max_depth=1000, max_features=150, n_jobs=-1)
 
     model = model.fit(features, target)
     return model
@@ -147,8 +160,8 @@ def plot():
     return send_file('static/output.png', mimetype='image/png')
 
 def send_telegram_message(message):
-    bot_token = ''
-    chat_id = ''
+    bot_token = BOT_TOKEN
+    chat_id = CHAT_ID
     bot = telebot.TeleBot(bot_token)
     bot.send_message(chat_id, message)
 
@@ -245,15 +258,18 @@ def main():
                 timestamps.append(current_time)  # Append current timestamp
                 predictions.append(prediction)  # Append prediction
                 prices.append(full_data[-1][-1])
-                if prediction > 0.5: # buy
-                    exchange.create_order(SYMBOL, 'limit', 'buy', crypto_amount, midpoint)
-                    print(f'Bought {crypto_amount} {CRYPTO} at {midpoint} {BASE}\nScore: {round(prediction, 3)}')
-                    send_telegram_message(f'Bought {crypto_amount} {CRYPTO} at {midpoint} {BASE}\nScore: {round(prediction, 3)}')
-                elif prediction < 0.45: # sell
-                    print(f'Sell zone !!!\nScore: {round(prediction, 3)}')
-                    send_telegram_message(f'Sell zone !!!\nScore: {round(prediction, 3)}')
+                if prediction > 0.6: # buy
+                    #exchange.create_order(SYMBOL, 'limit', 'buy', crypto_amount, midpoint)
+                    print(f'BUY ZONE !!!\nScore: {round(prediction, 3)}')
+                    #print(f'Bought {crypto_amount} {CRYPTO} at {midpoint} {BASE}\nScore: {round(prediction, 3)}')
+                    #send_telegram_message(f'Bought {crypto_amount} {CRYPTO} at {midpoint} {BASE}\nScore: {round(prediction, 3)}')
+                    send_telegram_message(f'BUY ZONE !!!\nScore: {round(prediction, 3)}')
+                elif prediction < 0.4: # sell
+                    print(f'SELL ZONE !!!\nScore: {round(prediction, 3)}')
+                    send_telegram_message(f'SELL ZONE !!!\nScore: {round(prediction, 3)}')
                 else:
-                    print('Skip')
+                    print(f'Neutral\nScore: {round(prediction, 3)}')
+                    send_telegram_message(f'Neutral\nScore: {round(prediction, 3)}')
 
             plot_thread = threading.Thread(target=plot_predictions, args=(timestamps[-50:], predictions[-50:], prices[-50:]))
             plot_thread.start()
