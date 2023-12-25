@@ -1,20 +1,20 @@
 #!/usr/bin/proxychains python3
 
-import ccxt
-from time import sleep
-import numpy as np
-from sklearn.ensemble import RandomForestClassifier
 from datetime import datetime
-import matplotlib.pyplot as plt
-from flask import Flask, render_template, send_file
-import threading
-from sklearn.model_selection import GridSearchCV
-import telebot
-import os
 from dotenv import load_dotenv
+from flask import Flask, render_template, send_file
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import GridSearchCV
+from time import sleep
+import ccxt
+import matplotlib.pyplot as plt
+import numpy as np
+import os
+import telebot
+import threading
 
 BASE = 'USDT'
-CRYPTO = 'BTC3L'
+CRYPTO = 'ETH'
 # BASE = 'USDC'
 # CRYPTO = 'USDT'
 SYMBOL = CRYPTO + '/' + BASE
@@ -260,16 +260,16 @@ def main():
                 prices.append(full_data[-1][-1])
                 if prediction > 0.6: # buy
                     #exchange.create_order(SYMBOL, 'limit', 'buy', crypto_amount, midpoint)
-                    print(f'BUY ZONE !!!\nScore: {round(prediction, 3)}')
+                    print(f'BUY ZONE !!!\nCoin: {CRYPTO}\nPrice: {round(midpoint, 2)}\nScore: {round(prediction, 3)}')
                     #print(f'Bought {crypto_amount} {CRYPTO} at {midpoint} {BASE}\nScore: {round(prediction, 3)}')
                     #send_telegram_message(f'Bought {crypto_amount} {CRYPTO} at {midpoint} {BASE}\nScore: {round(prediction, 3)}')
-                    send_telegram_message(f'BUY ZONE !!!\nScore: {round(prediction, 3)}')
+                    send_telegram_message(f'BUY ZONE !!!\nCoin: {CRYPTO}\nPrice: {round(midpoint, 2)}\nScore: {round(prediction, 3)}')
                 elif prediction < 0.4: # sell
-                    print(f'SELL ZONE !!!\nScore: {round(prediction, 3)}')
-                    send_telegram_message(f'SELL ZONE !!!\nScore: {round(prediction, 3)}')
+                    print(f'SELL ZONE !!!\nCoin: {CRYPTO}\nPrice: {round(midpoint, 2)}\nScore: {round(prediction, 3)}')
+                    send_telegram_message(f'SELL ZONE !!!\nCoin: {CRYPTO}\nPrice: {round(midpoint, 2)}\nScore: {round(prediction, 3)}')
                 else:
-                    print(f'Neutral\nScore: {round(prediction, 3)}')
-                    send_telegram_message(f'Neutral\nScore: {round(prediction, 3)}')
+                    print(f'Neutral\nCoin: {CRYPTO}\nPrice: {round(midpoint, 2)}\nScore: {round(prediction, 3)}')
+                    send_telegram_message(f'Neutral\nCoin: {CRYPTO}\nPrice: {round(midpoint, 2)}\nScore: {round(prediction, 3)}')
 
             plot_thread = threading.Thread(target=plot_predictions, args=(timestamps[-50:], predictions[-50:], prices[-50:]))
             plot_thread.start()
